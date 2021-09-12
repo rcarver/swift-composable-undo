@@ -82,12 +82,14 @@ public let gameReducer = Reducer<GameState, GameAction, GameEnvironment> { state
       !state.board.hasWinner
     else { return .none }
 
+    let checkpointLabel = "\(state.currentPlayer.label)'s move"
+
     state.board[row][column] = state.currentPlayer
 
     if !state.board.hasWinner {
       state.currentPlayer.toggle()
     }
-    return .checkpoint(.register("\(state.currentPlayer.label)'s move"))
+    return .checkpoint(.register(checkpointLabel))
 
   case .playAgainButtonTapped:
     state.board = .empty
