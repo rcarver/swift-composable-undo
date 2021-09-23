@@ -18,6 +18,7 @@ extension Effect where Output: SingleCheckpointAction {
   }
 }
 
+#if DEBUG
 extension TestStore where LocalState: Equatable, Action: (Equatable & SingleCheckpointAction) {
   public func receiveCheckpoint<Value>(
     _ expectedAction: CheckpointAction,
@@ -65,3 +66,4 @@ extension TestStore.Step where LocalAction: SingleCheckpointAction {
     .sendCheckpoint(action, in: /LocalAction.checkpoint, of: toState, file: file, line: line, update)
   }
 }
+#endif
