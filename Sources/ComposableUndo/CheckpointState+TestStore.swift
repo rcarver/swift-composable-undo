@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import ComposableArchitecture
 import UIKit
@@ -92,3 +93,4 @@ extension CheckpointState {
     }
   }
 }
+#endif
