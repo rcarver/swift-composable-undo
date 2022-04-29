@@ -1,8 +1,6 @@
 #if DEBUG
 import Foundation
 import ComposableArchitecture
-import UIKit
-
 
 extension TestStore where LocalState: Equatable, Action: Equatable {
   public func receiveCheckpoint<Value>(
