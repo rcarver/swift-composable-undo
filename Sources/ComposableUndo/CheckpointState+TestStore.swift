@@ -9,12 +9,12 @@ extension TestStore where LocalState: Equatable, Action: Equatable {
     of toState: WritableKeyPath<LocalState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,
-    _ update: @escaping (inout LocalState) throws -> Void = { _ in }
+    _ update: ((inout LocalState) throws -> Void)? = nil
   ) {
-    receive(toAction.embed(expectedAction), file: file, line: line) { state in
-      try update(&state)
+    receive(toAction.embed(expectedAction), { state in
+      try update?(&state)
       state[keyPath: toState].applyForTest(action: expectedAction)
-    }
+    }, file: file, line: line)
   }
 }
 
@@ -25,12 +25,12 @@ extension TestStore where LocalState: Equatable {
     of toState: WritableKeyPath<LocalState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,
-    _ update: @escaping (inout LocalState) throws -> Void = { _ in }
+    _ update: ((inout LocalState) throws -> Void)? = nil
   ) {
-    send(toAction.embed(action), file: file, line: line) { state in
-      try update(&state)
+    send(toAction.embed(action), { state in
+      try update?(&state)
       state[keyPath: toState].applyForTest(action: action)
-    }
+    }, file: file, line: line)
   }
 }
 
