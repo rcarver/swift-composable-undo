@@ -2,14 +2,14 @@
 import Foundation
 import ComposableArchitecture
 
-extension TestStore where LocalState: Equatable, Action: Equatable {
+extension TestStore where ScopedState: Equatable, Action: Equatable {
   public func receiveCheckpoint<Value>(
     _ expectedAction: CheckpointAction,
     in toAction: CasePath<Action, CheckpointAction>,
-    of toState: WritableKeyPath<LocalState, CheckpointState<Value>>,
+    of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,
-    _ update: ((inout LocalState) throws -> Void)? = nil
+    _ update: ((inout ScopedState) throws -> Void)? = nil
   ) {
     receive(toAction.embed(expectedAction), { state in
       try update?(&state)
@@ -18,14 +18,14 @@ extension TestStore where LocalState: Equatable, Action: Equatable {
   }
 }
 
-extension TestStore where LocalState: Equatable {
+extension TestStore where ScopedState: Equatable {
   public func sendCheckpoint<Value>(
     _ action: CheckpointAction,
-    in toAction: CasePath<LocalAction, CheckpointAction>,
-    of toState: WritableKeyPath<LocalState, CheckpointState<Value>>,
+    in toAction: CasePath<ScopedAction, CheckpointAction>,
+    of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,
-    _ update: ((inout LocalState) throws -> Void)? = nil
+    _ update: ((inout ScopedState) throws -> Void)? = nil
   ) {
     send(toAction.embed(action), { state in
       try update?(&state)
@@ -38,10 +38,10 @@ extension TestStore.Step {
   public static func receiveCheckpoint<Value>(
     _ action: CheckpointAction,
     in toAction: CasePath<Action, CheckpointAction>,
-    of toState: WritableKeyPath<LocalState, CheckpointState<Value>>,
+    of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,
-    _ update: @escaping (inout LocalState) throws -> Void = { _ in }
+    _ update: @escaping (inout ScopedState) throws -> Void = { _ in }
   ) -> Self {
     .receive(toAction.embed(action), file: file, line: line) { state in
       try update(&state)
@@ -51,11 +51,11 @@ extension TestStore.Step {
 
   public static func sendCheckpoint<Value>(
     _ action: CheckpointAction,
-    in toAction: CasePath<LocalAction, CheckpointAction>,
-    of toState: WritableKeyPath<LocalState, CheckpointState<Value>>,
+    in toAction: CasePath<ScopedAction, CheckpointAction>,
+    of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,
-    _ update: @escaping (inout LocalState) throws -> Void = { _ in }
+    _ update: @escaping (inout ScopedState) throws -> Void = { _ in }
   ) -> Self {
     .send(toAction.embed(action), file: file, line: line) { state in
       try update(&state)

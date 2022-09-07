@@ -1,5 +1,6 @@
 import Combine
 import ComposableArchitecture
+import Foundation
 
 extension Reducer {
   public func trackCheckpoints<Value>(
