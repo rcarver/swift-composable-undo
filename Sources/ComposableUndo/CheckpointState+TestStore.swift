@@ -2,10 +2,10 @@
 import Foundation
 import ComposableArchitecture
 
-extension TestStore where ScopedState: Equatable, Action: Equatable {
+extension TestStore where ScopedState: Equatable, Reducer.Action: Equatable {
   public func receiveCheckpoint<Value>(
     _ expectedAction: CheckpointAction,
-    in toAction: CasePath<Action, CheckpointAction>,
+    in toAction: CasePath<Reducer.Action, CheckpointAction>,
     of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,
@@ -37,7 +37,7 @@ extension TestStore where ScopedState: Equatable {
 extension TestStore.Step {
   public static func receiveCheckpoint<Value>(
     _ action: CheckpointAction,
-    in toAction: CasePath<Action, CheckpointAction>,
+    in toAction: CasePath<Reducer.Action, CheckpointAction>,
     of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
     file: StaticString = #file,
     line: UInt = #line,

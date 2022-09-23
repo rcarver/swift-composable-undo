@@ -19,7 +19,7 @@ extension Effect where Output: SingleCheckpointAction {
 }
 
 #if DEBUG
-extension TestStore where ScopedState: Equatable, Action: (Equatable & SingleCheckpointAction) {
+extension TestStore where ScopedState: Equatable, Reducer.Action: (Equatable & SingleCheckpointAction) {
   public func receiveCheckpoint<Value>(
     _ expectedAction: CheckpointAction,
     of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
@@ -27,7 +27,7 @@ extension TestStore where ScopedState: Equatable, Action: (Equatable & SingleChe
     line: UInt = #line,
     _ update: @escaping (inout ScopedState) throws -> Void = { _ in }
   ) {
-    receiveCheckpoint(expectedAction, in: /Action.checkpoint, of: toState, file: file, line: line, update)
+      receiveCheckpoint(expectedAction, in: /Reducer.Action.checkpoint, of: toState, file: file, line: line, update)
   }
 }
 
@@ -43,7 +43,7 @@ extension TestStore where ScopedState: Equatable, ScopedAction: SingleCheckpoint
   }
 }
 
-extension TestStore.Step where Action: SingleCheckpointAction {
+extension TestStore.Step where Reducer.Action: SingleCheckpointAction {
   public static func receiveCheckpoint<Value>(
     _ action: CheckpointAction,
     of toState: WritableKeyPath<ScopedState, CheckpointState<Value>>,
@@ -51,7 +51,7 @@ extension TestStore.Step where Action: SingleCheckpointAction {
     line: UInt = #line,
     _ update: @escaping (inout ScopedState) throws -> Void = { _ in }
   ) -> Self {
-    .receiveCheckpoint(action, in: /Action.checkpoint, of: toState, file: file, line: line, update)
+      .receiveCheckpoint(action, in: /Reducer.Action.checkpoint, of: toState, file: file, line: line, update)
   }
 }
 
